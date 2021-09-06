@@ -1,19 +1,35 @@
 # Docker Container that runs the Nebra Diagnostics Tool
 
-FROM arm32v6/alpine:3.12.4
+# FROM arm32v6/alpine:3.12.4
+# FROM balenalib/raspberry-pi-debian:buster-build-20210705 as builder
+FROM balenalib/raspberry-pi-debian-python:buster-run-20210705 as runner
 
 WORKDIR /opt/
 
+RUN \
+    apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" \
+    TZ="$SYSTEM_TIMEZONE" \
+    apt-get install -y \
+        python3 \
+        i2c-tools \
+        usbutils \
+        build-base \
+        python3-dev \
+        glib-dev \
+        dbus-dev \
+        py3-pip
+
 # hadolint ignore=DL3018
-RUN apk add --no-cache \
-    python3=3.8.10-r0 \
-    i2c-tools=4.1-r3 \
-    usbutils=012-r1 \
-    build-base \
-    python3-dev \
-    glib-dev \
-    dbus-dev \
-    py3-pip=20.1.1-r0
+# RUN apt install --no-cache \
+#     python3=3.8.10-r0 \
+#     i2c-tools=4.1-r3 \
+#     usbutils=012-r1 \
+#     build-base \
+#     python3-dev \
+#     glib-dev \
+#     dbus-dev \
+#     py3-pip=20.1.1-r0
 
 RUN mkdir /tmp/build
 COPY ./ /tmp/build
