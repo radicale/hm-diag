@@ -14,11 +14,13 @@ RUN \
         python3 \
         i2c-tools \
         usbutils \
-        build-base \
+        build-essential \
         python3-dev \
-        glib-dev \
-        dbus-dev \
-        py3-pip
+        libgirepository1.0-dev \
+        libglib2.0-dev \
+        dbus \
+        libdbus-1-3 libdbus-glib-1-dev libgirepository1.0-dev libdbus-1-dev \
+        python3-gi
 
 # hadolint ignore=DL3018
 # RUN apt install --no-cache \
