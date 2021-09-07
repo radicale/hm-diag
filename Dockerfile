@@ -2,7 +2,8 @@
 
 # FROM arm32v6/alpine:3.12.4
 # FROM balenalib/raspberry-pi-debian:buster-build-20210705 as builder
-FROM balenalib/raspberry-pi-debian-python:buster-run-20210705 as runner
+# FROM balenalib/raspberry-pi-debian-python:buster-run-20210705 as runner
+FROM balenalib/rockpi-4b-rk3399-debian-python as runner
 
 WORKDIR /opt/
 
