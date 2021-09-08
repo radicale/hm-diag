@@ -3,7 +3,8 @@
 # FROM arm32v6/alpine:3.12.4
 # FROM balenalib/raspberry-pi-debian:buster-build-20210705 as builder
 # FROM balenalib/raspberry-pi-debian-python:buster-run-20210705 as runner
-FROM balenalib/rockpi-4b-rk3399-debian-python:stretch as runner
+# FROM balenalib/rockpi-4b-rk3399-debian-python:stretch as runner
+FROM balenalib/rockpi-4b-rk3399-debian:stretch 
 
 WORKDIR /opt/
 
@@ -34,10 +35,16 @@ RUN \
 #     dbus-dev \
 #     py3-pip=20.1.1-r0
 
+RUN install_packages wget 
+RUN echo "deb http://apt.radxa.com/stretch/ stretch main" | tee -a /etc/apt/sources.list.d/apt-radxa-com.list 
+RUN wget -O - apt.radxa.com/stretch/public.key | apt-key add - 
+RUN apt-get update && apt-get install -y rockchip-overlay rockpi4-dtbo libmraa 
+RUN apt-get install python3-pip python3-setuptools
+
 RUN mkdir /tmp/build
 COPY ./ /tmp/build
 WORKDIR /tmp/build
-RUN pip install --no-cache -r /tmp/build/requirements.txt
+RUN pip3 install --no-cache -r /tmp/build/requirements.txt
 RUN python3 setup.py install
 RUN rm -rf /tmp/build
 COPY bin/gateway_mfr /usr/local/bin
