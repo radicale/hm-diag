@@ -1,10 +1,10 @@
 # Docker Container that runs the Nebra Diagnostics Tool
 
 # FROM arm32v6/alpine:3.12.4
-# FROM balenalib/raspberry-pi-debian:buster-build-20210705 as builder
+FROM balenalib/raspberry-pi-debian:buster-build-20210705 as builder
 # FROM balenalib/raspberry-pi-debian-python:buster-run-20210705 as runner
 # FROM balenalib/rockpi-4b-rk3399-debian-python:stretch as runner
-FROM balenalib/rockpi-4b-rk3399-debian:buster 
+# FROM balenalib/rockpi-4b-rk3399-debian:buster
 
 WORKDIR /opt/
 
@@ -59,3 +59,5 @@ RUN rustup target add aarch64-unknown-linux-musl
 RUN cross build --target aarch64-unknown-linux-musl --release
 
 ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5000", "hw_diag:wsgi_app"]
+# To test:
+# ./gateway-mfr-rs/target/aarch64-unknown-linux-musl/release/gateway_mfr --path /dev/i2c-7 test
