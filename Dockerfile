@@ -30,4 +30,10 @@ RUN rm -rf /tmp/build
 COPY bin/gateway_mfr /usr/local/bin
 COPY finish_setup_and_start_gunicorn finish_setup_and_start_gunicorn
 
-ENTRYPOINT ["finish_setup_and_start_gunicorn"]
+RUN apt-get install wget
+RUN echo "deb http://apt.radxa.com/buster-stable/ buster main" | tee -a /etc/apt/sources.list.d/apt-radxa-com.list
+RUN wget -O - apt.radxa.com/buster-stable/public.key | apt-key add -
+RUN apt-get update && apt-get install -y rockchip-overlay rockpi4-dtbo
+
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5000", "hw_diag:wsgi_app"]
+# ENTRYPOINT ["finish_setup_and_start_gunicorn"]
