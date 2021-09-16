@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# These commands are only necessary on rockpi
+# BALENA_DEVICE_TYPE is not available at build time 
+if [ "$BALENA_DEVICE_TYPE" = "rockpi-4b-rk3399" ]; then
+    apt-get install wget
+    echo "deb http://apt.radxa.com/buster-stable/ buster main" | tee -a /etc/apt/sources.list.d/apt-radxa-com.list
+    wget -O - apt.radxa.com/buster-stable/public.key | apt-key add -
+    apt-get update && apt-get install -y rockchip-overlay rockpi4-dtbo
+fi
+
+# Start gunicorn
+gunicorn --bind 0.0.0.0:5000 hw_diag:wsgi_app
