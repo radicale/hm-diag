@@ -35,5 +35,5 @@ RUN echo "deb http://apt.radxa.com/buster-stable/ buster main" | tee -a /etc/apt
 RUN wget -O - apt.radxa.com/buster-stable/public.key | apt-key add -
 RUN apt-get update && apt-get install -y rockchip-overlay rockpi4-dtbo
 
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5000", "hw_diag:wsgi_app"]
-# ENTRYPOINT ["finish_setup_and_start_gunicorn"]
+# ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5000", "hw_diag:wsgi_app"]
+ENTRYPOINT ["sh", "finish_setup_and_start_gunicorn"]
