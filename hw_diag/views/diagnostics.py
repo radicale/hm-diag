@@ -17,11 +17,12 @@ from hw_diag.utilities.hardware import lora_module_test
 from hw_diag.utilities.hardware import set_diagnostics_bt_lte
 from hw_diag.utilities.shell import get_environment_var
 from hw_diag.tasks import perform_hw_diagnostics
+from hw_diag.lock_singleton import LockSingleton
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "DEBUG"))
 
 DIAGNOSTICS = Blueprint('DIAGNOSTICS', __name__)
-
+ECC_LOCK = LockSingleton()
 
 def read_diagnostics_file():
     diagnostics = {}
@@ -73,8 +74,8 @@ def get_initialisation_file():
     get_ethernet_addresses(diagnostics)
     get_environment_var(diagnostics)
     set_diagnostics_bt_lte(diagnostics)
-    ecc_tests = get_gateway_mfr_test_result()
-    public_keys = get_public_keys_rust()
+    ecc_tests = get_gateway_mfr_test_result(ECC_LOCK)
+    public_keys = get_public_keys_rust(ECC_LOCK)
 
     if ecc_tests['result'] == 'pass':
         diagnostics["ECC"] = True

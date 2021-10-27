@@ -13,11 +13,12 @@ from hw_diag.utilities.miner import fetch_miner_data
 from hw_diag.utilities.shell import get_environment_var
 from hw_diag.utilities.gcs_shipper import upload_diagnostics
 from hm_pyhelper.miner_param import get_public_keys_rust
+from hw_diag.lock_singleton import LockSingleton
 
 
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
-
+ECC_LOCK = LockSingleton()
 
 def perform_hw_diagnostics(ship=False):  # noqa: C901
     log.info('Running periodic hardware diagnostics')
@@ -30,8 +31,8 @@ def perform_hw_diagnostics(ship=False):  # noqa: C901
     get_ethernet_addresses(diagnostics)
     get_environment_var(diagnostics)
     get_rpi_serial(diagnostics)
-    detect_ecc(diagnostics)
-    public_keys = get_public_keys_rust()
+    detect_ecc(diagnostics, ECC_LOCK)
+    public_keys = get_public_keys_rust(ECC_LOCK)
 
     diagnostics['LOR'] = lora_module_test()
     diagnostics['OK'] = public_keys['key']
