@@ -4,17 +4,14 @@ import os
 from flask import Flask
 from flask_apscheduler import APScheduler
 from retry import retry
-from threading import Lock
 
 from hw_diag.cache import cache
-from hw_diag.lock_singleton import LockSingleton
 from hw_diag.tasks import perform_hw_diagnostics
 from hw_diag.views.diagnostics import DIAGNOSTICS
 from hm_pyhelper.miner_param import provision_key
 
 
 DEBUG = bool(os.getenv('DEBUG', '0'))
-ECC_LOCK = LockSingleton()
 
 log = logging.getLogger()
 if DEBUG:
@@ -24,7 +21,7 @@ if DEBUG:
 
 @retry(ValueError, tries=10, delay=1, backoff=2, logger=log)
 def perform_key_provisioning():
-    if not provision_key(ECC_LOCK):
+    if not provision_key():
         raise ValueError
 
 

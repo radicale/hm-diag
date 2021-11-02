@@ -37,7 +37,7 @@ def set_diagnostics_bt_lte(diagnostics):
     return diagnostics
 
 
-def detect_ecc(diagnostics, ecc_lock):
+def detect_ecc(diagnostics):
     # The order of the values in the lists is important!
     # It determines which value will be available for which key
     commands = [
@@ -48,11 +48,7 @@ def detect_ecc(diagnostics, ecc_lock):
 
     for (command, param, key) in zip(commands, parameters, keys):
         try:
-            if ecc_lock.acquire():
-                diagnostics[key] = config_search_param(command, param)
-                ecc_lock.release()
-            else:
-                logging.error("ECC in use, unable to acquire lock.")
+            diagnostics[key] = config_search_param(command, param)
         except Exception as e:
             logging.error(e)
 

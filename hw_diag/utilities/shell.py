@@ -1,6 +1,8 @@
 import subprocess
 import os
 
+from hm_pyhelper.interprocess_lock import ecc_lock
+
 
 def get_environment_var(diagnostics):
     # The order of the values in the lists is important!
@@ -19,6 +21,7 @@ def get_environment_var(diagnostics):
         diagnostics[key] = os.getenv(var)
 
 
+@ecc_lock()
 def config_search_param(command, param):
     """
     input:
