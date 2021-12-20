@@ -33,7 +33,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            nebraltd/hm-diag
+            radicale/hm-diag
             ghcr.io/${{ github.repository }}
           flavor: |
             latest=true
