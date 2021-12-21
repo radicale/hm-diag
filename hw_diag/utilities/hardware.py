@@ -2,7 +2,7 @@ from time import sleep
 import dbus
 from hm_pyhelper.logger import get_logger
 from hm_pyhelper.miner_param import get_public_keys_rust
-from hm_pyhelper.hardware_definitions import variant_definitions, is_rockpi
+from hm_pyhelper.hardware_definitions import variant_definitions
 from hw_diag.utilities.shell import config_search_param
 
 logging = get_logger(__name__)
@@ -186,14 +186,17 @@ def set_diagnostics_bt_lte(diagnostics):
 def detect_ecc(diagnostics):
     # The order of the values in the lists is important!
     # It determines which value will be available for which key
-    if is_rockpi():
-        commands = [
-            'i2cdetect -y 7'
-        ]
-    else:
-        commands = [
-            'i2cdetect -y 1'
-        ]
+    variant = diagnostics.get('VA')
+    variant_data = variant_definitions.get(variant)
+    if variant_data:
+        eccbus = variant_data.get('ECCBUS')
+
+    if not eccbus:
+        eccbus = 'i2c-1'
+
+    commands = [
+            'i2cdetect -y ' + eccbus.split('-')[1]
+    ]
 
     parameters = ["60 --"]
     keys = ["ECC"]
