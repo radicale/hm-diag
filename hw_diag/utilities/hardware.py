@@ -189,13 +189,13 @@ def detect_ecc(diagnostics):
     variant = diagnostics.get('VA')
     variant_data = variant_definitions.get(variant)
     if variant_data:
-        eccbus = variant_data.get('ECCBUS')
+        ksb = variant_data.get('KEY_STORAGE_BUS')
 
-    if not eccbus:
-        eccbus = 'i2c-1'
+    if not ksb:
+        ksb = '/dev/i2c-1'
 
     commands = [
-            'i2cdetect -y ' + eccbus.split('-')[1]
+            'i2cdetect -y ' + ksb.split('-')[-1]
     ]
 
     parameters = ["60 --"]
